@@ -10,27 +10,54 @@
  */
 class Solution {
 public:
-    bool isPalindrome(ListNode* head) {
-        stack<int>st;
-        ListNode* temp1=head;
-        while(temp1 != NULL)
-        {
-            st.push(temp1->val);
-            temp1=temp1->next;
-        }
-        ListNode* temp2=head;
-        while(temp2 != NULL)
-        {
-            if(temp2->val != st.top())
-            return false;
+    ListNode* reverseLinkedList(ListNode* head)
+    {
+      if(head==NULL || head->next==NULL)
+      return head;
+      ListNode* prev=NULL;
+      ListNode* curr=head;
+      ListNode* forward=NULL;
 
-            else
+      while(curr != NULL)
+      {
+        forward=curr->next;
+        curr->next=prev;
+        prev=curr;
+        curr=forward;
+      
+      }
+      return prev;
+
+    }
+
+    bool isPalindrome(ListNode* head) {
+        if(head==NULL || head->next==NULL)
+        return true;
+
+        ListNode* slow=head;
+        ListNode* fast=head;
+        while(fast->next!=NULL && fast->next->next!=NULL)
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        ListNode* newHead=reverseLinkedList(slow->next);
+        ListNode* first=head;
+        ListNode* second=newHead;
+        while(second!=NULL)
+        {
+            if(first->val != second->val)
             {
-            temp2=temp2->next;
-            st.pop();
+                reverseLinkedList(newHead);
+                return false;
             }
 
+
+                first=first->next;
+                second=second->next;
+            
         }
+        reverseLinkedList(newHead);
         return true;
     }
 };
